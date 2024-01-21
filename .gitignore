@@ -1,0 +1,12 @@
+.DS_Store
+
+extracted_frames/
+frames/
+masks/
+pred_masks/
+yolo_labels/
+Patient*
+
+event*
+*.mp4
+*.mov
