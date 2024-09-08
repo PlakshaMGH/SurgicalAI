@@ -14,5 +14,8 @@ then
     exit
 fi
 
-echo "Downloading data from B2"
-rclone copy remote:right-lower-lobe/ ./data/right-lower-lobe --progress --transfers 32
+
+echo "rclone copy remote:right-lower-lobe/ ./data/right-lower-lobe --progress --transfers 32"
+
+# For endovis, excluding the orginal data downloaded folder. (folder: OG)
+echo "rclone copy remote:endovis ./data/endovis --progress --transfers 32 --exclude \"**/OG/**\""
