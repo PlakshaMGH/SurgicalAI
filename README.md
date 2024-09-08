@@ -1,5 +1,30 @@
 # Plaksha - MGH: AI in Thoracic Surgery
 
+## Getting Started
+
+Install [uv(python package manager)](https://github.com/astral-sh/uv)
+```
+# On macOS and Linux.
+$ curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# On Windows.
+$ powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# With pip.
+$ pip install uv
+```
+
+Install dependencies
+```
+$ uv venv --python=3.12
+
+# activate the venv
+$ source .venv/bin/activate
+
+# install dependencies
+$ uv pip install -r requirements.txt
+```
+
 ## Tasks
 * Video Segmentation
 * Action Recognition in Surgical Videos
