@@ -1,4 +1,5 @@
 .DS_Store
+.env
 
 extracted_frames/
 frames/
@@ -10,3 +11,5 @@ Patient*
 event*
 *.mp4
 *.mov
+*.pth
+*.pt
