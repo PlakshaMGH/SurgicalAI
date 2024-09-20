@@ -8,6 +8,8 @@ pred_masks/
 yolo_labels/
 Patient*
 
+external/
+
 event*
 *.mp4
 *.mov
