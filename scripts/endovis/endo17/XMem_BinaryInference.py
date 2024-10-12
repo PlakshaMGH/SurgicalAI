@@ -323,5 +323,13 @@ for network_path in sorted(
 
 print("Inference Completed")
 
-print(IoUs)
-print(DiceScores)
+# saving the results into a json file
+output_name = f"{network_dir.name}"
+output_dir = Path("results")
+output_dir.mkdir(exist_ok=True)
+
+IoUs_df = pd.DataFrame(IoUs)
+IoUs_df.to_json(output_dir / f"{output_name}_IoUs.json")
+
+DiceScores_df = pd.DataFrame(DiceScores)
+DiceScores_df.to_json(output_dir / f"{output_name}_DiceScores.json")
