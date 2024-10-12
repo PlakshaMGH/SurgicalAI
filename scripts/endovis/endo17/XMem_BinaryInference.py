@@ -66,10 +66,9 @@ torch.cuda.empty_cache()
 
 COLOR = (3, 192, 60)
 
-main_folder = Path("./data")
-
-VIDEOS_PATH = main_folder / "endo17_binary" / "frames"
-MASKS_PATH = main_folder / "endo17_binary" / "masks"
+main_folder = Path("../../../data/endovis/endo17/data")
+VIDEOS_PATH = main_folder / "frames" / "endo17_train_frames"
+MASKS_PATH = main_folder / "masks" / "endo17_train_masks" / "binary_masks"
 
 
 def binary2color(binary_mask, color):
