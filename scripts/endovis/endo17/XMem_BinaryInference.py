@@ -276,7 +276,8 @@ parser.add_argument("--network_dir", type=str, required=True)
 parser.add_argument("--video_names", type=str, nargs="+", required=False)
 args = parser.parse_args()
 
-network_dir = args.network_dir
+
+# constructing the test subset
 test_subset_names = args.video_names
 if test_subset_names is not None:
     test_subset = {i.name for i in VIDEOS_PATH.iterdir() if i.name in test_subset_names}
@@ -284,6 +285,8 @@ else:
     test_subset_names = {i.name for i in VIDEOS_PATH.iterdir()}
     test_subset = None
 
+# construct the paths to the networks
+network_dir = args.network_dir
 network_dir = Path(network_dir)
 paths = []
 if network_dir.is_dir():
