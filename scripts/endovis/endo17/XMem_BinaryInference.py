@@ -67,8 +67,8 @@ torch.cuda.empty_cache()
 COLOR = (3, 192, 60)
 
 main_folder = Path("../../../data/endovis/endo17/data")
-VIDEOS_PATH = main_folder / "frames" / "endo17_train_frames"
-MASKS_PATH = main_folder / "masks" / "endo17_train_masks" / "binary_masks"
+VIDEOS_PATH = main_folder / "frames" / "endo17_test_frames"
+MASKS_PATH = main_folder / "masks" / "endo17_test_masks" / "binary_masks"
 
 
 def binary2color(binary_mask, color):
@@ -177,7 +177,7 @@ def singleVideoInference(images_paths, first_mask, processor, size=-1):
 
         prediction = processor.step(frame_torch, first_mask)
 
-        for image_path in tqdm(images_paths[1:]):
+        for image_path in images_paths[1:]:
             frame = io.imread(image_path)
             # convert numpy array to pytorch tensor format
             frame_torch = im_transform(frame).to(device)
@@ -223,7 +223,7 @@ def doInference(
 ):
     overallIoU = []
     overallDice = []
-    for video_folder in sorted(frames_folder.iterdir()):
+    for video_folder in tqdm(sorted(frames_folder.iterdir())):
 
         if subset is not None and video_folder.name not in subset:
             continue
