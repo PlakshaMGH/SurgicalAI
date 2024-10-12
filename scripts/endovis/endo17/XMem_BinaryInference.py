@@ -284,12 +284,16 @@ else:
     test_subset_names = {i.name for i in VIDEOS_PATH.iterdir()}
     test_subset = None
 
-
+network_dir = Path(network_dir)
 paths = []
-for network_path in Path(network_dir).iterdir():
-    if "checkpoint" in network_path.name or ".pth" not in network_path.name:
-        continue
-    paths.append(network_path)
+if network_dir.is_dir():
+    for network_path in network_dir.iterdir():
+        if "checkpoint" in network_path.name or ".pth" not in network_path.name:
+            continue
+        paths.append(network_path)
+else:
+    # will test only a single model
+    paths.append(network_dir)
 
 IoUs = {}
 for network_path in sorted(
