@@ -1,8 +1,10 @@
 import os
 import sys
 import gc
+import argparse
+import pandas as pd
 
-XMem_path = os.path.abspath("./XMem")
+XMem_path = os.path.abspath("../../../external/XMem")  # Parent folder /app/mount
 sys.path.append(XMem_path)
 
 from inspect import getsource
@@ -36,8 +38,6 @@ from inference.interact.interactive_utils import (
     index_numpy_to_one_hot_torch,
     torch_prob_to_numpy_mask,
 )
-
-from progressbar import progressbar
 
 torch.set_grad_enabled(False)
 
@@ -271,8 +271,22 @@ def doInference(
     return overallIoU, overallDice
 
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--network_dir", type=str, required=True)
+parser.add_argument("--video_names", type=str, nargs="+", required=False)
+args = parser.parse_args()
+
+network_dir = args.network_dir
+test_subset_names = args.video_names
+if test_subset_names is not None:
+    test_subset = {i.name for i in VIDEOS_PATH.iterdir() if i.name in test_subset_names}
+else:
+    test_subset_names = {i.name for i in VIDEOS_PATH.iterdir()}
+    test_subset = None
+
+
 paths = []
-for network_path in Path("./saves/Nov15_20.28.13_EndoVis17_Binary").iterdir():
+for network_path in Path(network_dir).iterdir():
     if "checkpoint" in network_path.name or ".pth" not in network_path.name:
         continue
     paths.append(network_path)
@@ -282,9 +296,14 @@ for network_path in sorted(
     paths, key=lambda x: int(x.name.split("_")[-1].split(".")[0])
 ):
     print(network_path.name)
-    test_subset = {i.name for i in VIDEOS_PATH.iterdir() if "test" in i.name}
+    test_subset_names = {i.name for i in VIDEOS_PATH.iterdir() if "test" in i.name}
     overallIoU, overallDice = doInference(
-        network_path, config, VIDEOS_PATH, MASKS_PATH, subset=test_subset, size=384
+        network_path,
+        config,
+        VIDEOS_PATH,
+        MASKS_PATH,
+        subset=test_subset,
+        size=384,
     )
     IoUs[network_path.name] = sum(overallIoU) / len(overallIoU)
     print("*" * 100)
@@ -292,9 +311,3 @@ for network_path in sorted(
 print("Inference Completed")
 
 sorted(IoUs.items(), key=lambda x: x[1], reverse=True)[0]
-
-network_path = "./saves/Nov15_20.28.13_EndoVis17_Binary/XMem_Binary_Endo17.pth"
-test_subset = {i.name for i in VIDEOS_PATH.iterdir() if "test" in i.name}
-overallIoU, overallDice = doInference(
-    network_path, config, VIDEOS_PATH, MASKS_PATH, subset=test_subset, size=384
-)
