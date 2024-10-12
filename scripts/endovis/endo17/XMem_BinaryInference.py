@@ -299,11 +299,11 @@ else:
     paths.append(network_dir)
 
 IoUs = {}
+DiceScores = {}
 for network_path in sorted(
     paths, key=lambda x: int(x.name.split("_")[-1].split(".")[0])
 ):
     print(network_path.name)
-    test_subset_names = {i.name for i in VIDEOS_PATH.iterdir() if "test" in i.name}
     overallIoU, overallDice = doInference(
         network_path,
         config,
@@ -312,9 +312,16 @@ for network_path in sorted(
         subset=test_subset,
         size=384,
     )
-    IoUs[network_path.name] = sum(overallIoU) / len(overallIoU)
+    # store the IoU and Dice scores in a dictionary according to the name of the test subset video
+    named_IoUs = {name: iou for name, iou in zip(test_subset_names, overallIoU)}
+    named_DiceScores = {
+        name: dice for name, dice in zip(test_subset_names, overallDice)
+    }
+    IoUs[network_path.name] = named_IoUs
+    DiceScores[network_path.name] = named_DiceScores
     print("*" * 100)
 
 print("Inference Completed")
 
-sorted(IoUs.items(), key=lambda x: x[1], reverse=True)[0]
+print(IoUs)
+print(DiceScores)
